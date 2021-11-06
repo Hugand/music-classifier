@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'views/listen_view.dart';
 import 'res/colors.dart';
 
 void main() {
@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Birdy',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: CustomColors.black,
       ),
@@ -32,6 +33,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedMenuItem = 0;
+
+  final List<Widget> _viewsComponents = <Widget>[
+    const ListenView(),
+    const Center(child: Text("History"))
+  ];
 
   void _setSelectedMenuItem(int index) {
     setState(() {
@@ -54,44 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomOpacity: 0.0,
         elevation: 0.0,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width - 50.0,
-              height: MediaQuery.of(context).size.width - 50.0,
-              padding: const EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(
-                  width: 6.0,
-                  color: Colors.black,
-                ),
-                borderRadius: BorderRadius.circular(600.0),
-              ),
-              child: MaterialButton(
-                color: Colors.black,
-                shape: const CircleBorder(),
-                onPressed: () {},
-                child: Center(
-                    child: Container(
-                      margin: const EdgeInsets.all(70.0),
-                      width: 100.0,
-                      height: 100.0,
-                      child: SvgPicture.asset(
-                        'assets/img/music-alt.svg',
-                        color: Colors.white,
-                        semanticsLabel: 'A red up arrow'
-                      )
-                    ),
-                  )
-              )
-            )
-            
-          ],
-        ),
-      ),
+      body: _viewsComponents.elementAt(_selectedMenuItem),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         items: <BottomNavigationBarItem>[
