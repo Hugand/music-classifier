@@ -67,8 +67,22 @@ class _ListenViewState extends State<ListenView> {
   }
 
 
+ void getFiles() async { //asyn function to get list of files
+    // Get the system temp directory.
+    String rootDir = (await getApplicationDocumentsDirectory()).path;
+    Directory systemTempDir = Directory('/data/user/0/com.example.birdy_mobile');
+    // var systemTempDir = Directory.systemTemp;
+
+    // List directory contents, recursing into sub-directories,
+    // but not following symbolic links.
+    await for (var entity in systemTempDir.list(recursive: true, followLinks: false)) {
+      print(entity.path);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getFiles();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

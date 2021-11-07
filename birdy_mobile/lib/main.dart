@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'views/listen_view.dart';
+import 'components/atoms/bottom_nav_item.dart';
+import 'components/views/listen_view.dart';
 import 'res/colors.dart';
 
 void main() {
@@ -64,22 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-                const AssetImage("assets/img/headphones.png"),
-                color: _selectedMenuItem == 0 ? Colors.white : Colors.white54,
-                size: 24,
-            ),
-            label: 'Listen',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-                const AssetImage("assets/img/history-icon.png"),
-                color: _selectedMenuItem == 1 ? Colors.white : Colors.white54,
-                size: 24,
-            ),
-            label: 'History',
-          ),
+          BottomNavItem.build('Listen', 'assets/img/headphones.png', _selectedMenuItem == 0),
+          BottomNavItem.build('History', 'assets/img/history-icon.png', _selectedMenuItem == 0),
         ],
         currentIndex: _selectedMenuItem,
         selectedItemColor: Colors.white,
