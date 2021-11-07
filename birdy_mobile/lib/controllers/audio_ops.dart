@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -31,11 +32,12 @@ class AudioOpsController {
       bool appDataFolderExists = await appDataFolder.exists();
       if (!appDataFolderExists) await appDataFolder.create(recursive: true);
 
-      final filepath = rootDir + '/' + DateTime.now().millisecondsSinceEpoch.toString() + '.wav';
+      final filepath = '$rootDir/${DateTime.now().millisecondsSinceEpoch.toString()}.wav';
       _audioRecorder.start(path: filepath);
 
       return true;
     } catch(e) {
+      log(e.toString());
       return false;
     }
   }
@@ -44,7 +46,8 @@ class AudioOpsController {
     try {
       return (await _audioRecorder.stop())!;
     } catch(e) {
-      return "";
+      log(e.toString());
+      return '';
     }
   }
 
@@ -53,6 +56,7 @@ class AudioOpsController {
       await _audioPlayer.setFilePath(audioFilePath);
       await _audioPlayer.play();
     } catch(e) {
+      log(e.toString());
       return;
     }
   }
