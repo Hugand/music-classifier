@@ -1,11 +1,7 @@
-import 'dart:io';
-
+import 'dart:async';
+import 'package:birdy_mobile/controllers/audio_ops.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:record/record.dart';
 
 class ListenView extends StatefulWidget {
   const ListenView({Key? key}) : super(key: key);
@@ -15,74 +11,40 @@ class ListenView extends StatefulWidget {
 }
 
 class _ListenViewState extends State<ListenView> {
-  final Record _audioRecorder = Record();
+  final AudioOpsController _audioOpsController = AudioOpsController();
+  bool _recording = false;
 
-  void _recordAudio() async {
-    Map<Permission, PermissionStatus> permissions = await [
-      Permission.storage,
-      Permission.microphone,
-    ].request();
-
-    bool permissionsGranted = permissions[Permission.storage]!.isGranted &&
-        permissions[Permission.microphone]!.isGranted;
-    String rootDir = (await getApplicationDocumentsDirectory()).path;
-    if (permissionsGranted) {
-      Directory appFolder = Directory(rootDir);
-      bool appFolderExists = await appFolder.exists();
-      if (!appFolderExists) {
-        final created = await appFolder.create(recursive: true);
-        // print(created.path);
-      }
-
-      final filepath = rootDir + DateTime.now().millisecondsSinceEpoch.toString() + '.wav';
-
-      await _audioRecorder.start(path: filepath);
-      print('Starting... ' + filepath);
-
-      sleep(const Duration(seconds: 6));
-      stopRecording();
-      // emit(RecordOn());
-    } else {
-      print('Permissions not granted');
-    }
+  void _handleStopRecording() async {
+    String snippetPath = await _audioOpsController.stopRecording();
+    setState(() {  _recording = false; });
+    await _audioOpsController.playAudio(snippetPath);
   }
 
-  void stopRecording() async {
-    try {
-      String? path = await _audioRecorder.stop();
-      // emit(RecordStopped());
-      print('Output path $path');
+  void _recordSnippet() async {
+    bool startRecordingResult = await _audioOpsController.recordSnippet();
+    setState(()  {
+      _recording = startRecordingResult;
+    });
 
-      AudioPlayer _audioPlayer = AudioPlayer();
-      final duration = await _audioPlayer.setFilePath(path!);
-      print("DURATION: " + duration.toString());
-      await _audioPlayer.play();
-      sleep(const Duration(seconds: 4));
-
-      await _audioPlayer.stop();
-
-    } catch(e) {
-      print("Error: " + e.toString());
-    }
+    if(_recording) Timer(const Duration(seconds: 6), _handleStopRecording);
   }
 
+//  void getFiles() async { //asyn function to get list of files
+//     // Get the system temp directory.
+//     String rootDir = (await getApplicationDocumentsDirectory()).path;
+//     Directory systemTempDir = Directory('/data/user/0/com.example.birdy_mobile');
+//     // var systemTempDir = Directory.systemTemp;
 
- void getFiles() async { //asyn function to get list of files
-    // Get the system temp directory.
-    String rootDir = (await getApplicationDocumentsDirectory()).path;
-    Directory systemTempDir = Directory('/data/user/0/com.example.birdy_mobile');
-    // var systemTempDir = Directory.systemTemp;
-
-    // List directory contents, recursing into sub-directories,
-    // but not following symbolic links.
-    await for (var entity in systemTempDir.list(recursive: true, followLinks: false)) {
-      print(entity.path);
-    }
-  }
+//     // List directory contents, recursing into sub-directories,
+//     // but not following symbolic links.
+//     await for (var entity in systemTempDir.list(recursive: true, followLinks: false)) {
+//       print(entity.path);
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {
-    getFiles();
+    // getFiles();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,15 +56,15 @@ class _ListenViewState extends State<ListenView> {
             decoration: BoxDecoration(
               color: Colors.transparent,
               border: Border.all(
-                width: 6.0,
-                color: Colors.black,
+                width: 4.0,
+                color: _recording ? Colors.black : Colors.white,
               ),
               borderRadius: BorderRadius.circular(600.0),
             ),
             child: MaterialButton(
               color: Colors.black,
               shape: const CircleBorder(),
-              onPressed: _recordAudio,
+              onPressed: _recordSnippet,
               child: Center(
                   child: Container(
                     margin: const EdgeInsets.all(70.0),
