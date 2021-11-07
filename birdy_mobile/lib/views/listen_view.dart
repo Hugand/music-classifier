@@ -18,6 +18,8 @@ class _ListenViewState extends State<ListenView> {
     String snippetPath = await _audioOpsController.stopRecording();
     setState(() {  _recording = false; });
     await _audioOpsController.playAudio(snippetPath);
+
+    _audioOpsController.requestClassification(snippetPath);
   }
 
   void _recordSnippet() async {
@@ -26,21 +28,8 @@ class _ListenViewState extends State<ListenView> {
       _recording = startRecordingResult;
     });
 
-    if(_recording) Timer(const Duration(seconds: 6), _handleStopRecording);
+    if(_recording) Timer(const Duration(seconds: 3), _handleStopRecording);
   }
-
-//  void getFiles() async { //asyn function to get list of files
-//     // Get the system temp directory.
-//     String rootDir = (await getApplicationDocumentsDirectory()).path;
-//     Directory systemTempDir = Directory('/data/user/0/com.example.birdy_mobile');
-//     // var systemTempDir = Directory.systemTemp;
-
-//     // List directory contents, recursing into sub-directories,
-//     // but not following symbolic links.
-//     await for (var entity in systemTempDir.list(recursive: true, followLinks: false)) {
-//       print(entity.path);
-//     }
-//   }
 
   @override
   Widget build(BuildContext context) {

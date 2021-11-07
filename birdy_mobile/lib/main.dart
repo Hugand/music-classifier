@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'components/atoms/bottom_nav_item.dart';
-import 'components/views/listen_view.dart';
+import 'views/widgets/bottom_nav_item.dart';
+import 'views/listen_view.dart';
 import 'res/colors.dart';
 
 void main() {

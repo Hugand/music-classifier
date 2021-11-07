@@ -1,7 +1,10 @@
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
 
+import 'package:birdy_mobile/model/audio_snippet.dart';
+import 'package:birdy_mobile/net/api.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -58,6 +61,40 @@ class AudioOpsController {
     } catch(e) {
       log(e.toString());
       return;
+    }
+  }
+
+  Future<String> _getAudioSnippetsFilesPath() async {
+    String rootDir = (await getApplicationDocumentsDirectory()).path;
+    Directory audioSnippetsFolder = Directory('$rootDir/audio_snippet_files');
+    bool audioSnippetsFolderExists = await audioSnippetsFolder.exists();
+    if (!audioSnippetsFolderExists) await audioSnippetsFolder.create(recursive: true);
+
+    return audioSnippetsFolder.path;
+  }
+
+  void requestClassification(String snippetPath) async {
+    AudioSnippet audioSnippet = AudioSnippet(snippetPath);
+    await audioSnippet.readFileBytes();
+    
+    audioSnippet = await Api.makePrediction(audioSnippet);
+    String encodedAudioSnippet = jsonEncode(audioSnippet);
+    String audioSnippetsFilesPath = await _getAudioSnippetsFilesPath();
+
+    File newAudioFile = File('$audioSnippetsFilesPath/${audioSnippet.audioName}');
+    await newAudioFile.writeAsString(encodedAudioSnippet);
+  }
+
+  void getFiles() async { //asyn function to get list of files
+    // Get the system temp directory.
+    String rootDir = (await getApplicationDocumentsDirectory()).path;
+    Directory systemTempDir = Directory('/data/user/0/com.example.birdy_mobile');
+    // var systemTempDir = Directory.systemTemp;
+
+    // List directory contents, recursing into sub-directories,
+    // but not following symbolic links.
+    await for (var entity in systemTempDir.list(recursive: true, followLinks: false)) {
+      print(entity.path);
     }
   }
 }
