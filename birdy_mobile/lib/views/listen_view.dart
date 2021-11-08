@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:birdy_mobile/controllers/audio_ops.dart';
+import 'package:birdy_mobile/model/audio_snippet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -17,7 +18,7 @@ class _ListenViewState extends State<ListenView> {
   void _handleStopRecording() async {
     String snippetPath = await _audioOpsController.stopRecording();
     setState(() {  _recording = false; });
-    await _audioOpsController.playAudio(snippetPath);
+    await _audioOpsController.playAudio(AudioSnippet(snippetPath));
 
     _audioOpsController.requestClassification(snippetPath);
   }

@@ -1,3 +1,4 @@
+import 'package:birdy_mobile/views/history_view.dart';
 import 'package:flutter/material.dart';
 import 'views/widgets/bottom_nav_item.dart';
 import 'views/listen_view.dart';
@@ -37,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _viewsComponents = <Widget>[
     const ListenView(),
-    const Center(child: Text("History"))
+    const HistoryView(),
   ];
 
   void _setSelectedMenuItem(int index) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
 
+import 'package:birdy_mobile/helpers.dart';
 import 'package:birdy_mobile/model/audio_snippet.dart';
 import 'package:birdy_mobile/net/api.dart';
 import 'package:just_audio/just_audio.dart';
@@ -54,9 +55,16 @@ class AudioOpsController {
     }
   }
 
-  Future<void> playAudio(String audioFilePath) async {
+  Future<AudioSnippet> _setAudioSnippetDuration(AudioSnippet audioSnippet) async {
+    Duration? duration = await _audioPlayer.setFilePath(audioSnippet.filePath);
+    audioSnippet.setDuration(duration!.inMilliseconds);
+
+    return audioSnippet;
+  }
+
+  Future<void> playAudio(AudioSnippet audioSnippet) async {
     try {
-      await _audioPlayer.setFilePath(audioFilePath);
+      await _audioPlayer.setFilePath(audioSnippet.filePath);
       await _audioPlayer.play();
     } catch(e) {
       log(e.toString());
@@ -75,6 +83,7 @@ class AudioOpsController {
 
   void requestClassification(String snippetPath) async {
     AudioSnippet audioSnippet = AudioSnippet(snippetPath);
+    audioSnippet = await _setAudioSnippetDuration(audioSnippet);
     await audioSnippet.readFileBytes();
     
     audioSnippet = await Api.makePrediction(audioSnippet);
@@ -85,16 +94,23 @@ class AudioOpsController {
     await newAudioFile.writeAsString(encodedAudioSnippet);
   }
 
-  void getFiles() async { //asyn function to get list of files
-    // Get the system temp directory.
-    String rootDir = (await getApplicationDocumentsDirectory()).path;
-    Directory systemTempDir = Directory('/data/user/0/com.example.birdy_mobile');
-    // var systemTempDir = Directory.systemTemp;
+  Future<List<AudioSnippet>> loadAudioSnippetsHistory() async {
+    List<String> historyFilesPaths = await Helpers.getHistoryFilesPaths();
+    List<AudioSnippet> audioSnippetsList = [];
 
-    // List directory contents, recursing into sub-directories,
-    // but not following symbolic links.
-    await for (var entity in systemTempDir.list(recursive: true, followLinks: false)) {
-      print(entity.path);
+    for(String path in historyFilesPaths) {
+      File audioSnippetFile = File(path);
+      String jsonEncodedAudioSnippet = await audioSnippetFile.readAsString();
+      Map<String, dynamic> decodedJson = jsonDecode(jsonEncodedAudioSnippet);
+      AudioSnippet audioSnippet = AudioSnippet.fromJson(decodedJson);
+      audioSnippetsList.insert(0, audioSnippet);
     }
+
+    return audioSnippetsList;
+  }
+
+
+  Future<void> dispose() async {
+    await _audioPlayer.dispose();
   }
 }
