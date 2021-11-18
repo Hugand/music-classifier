@@ -28,10 +28,11 @@ class AudioOpsController {
   Future<bool> recordSnippet() async {
     try {
       bool arePermissionsGranted = await _requestPermissions();
-      String rootDir = (await getApplicationDocumentsDirectory()).path;
+      print(arePermissionsGranted);
 
       if(!arePermissionsGranted) return false;
 
+      String rootDir = (await getApplicationDocumentsDirectory()).path;
       Directory appDataFolder = Directory(rootDir);
       bool appDataFolderExists = await appDataFolder.exists();
       if (!appDataFolderExists) await appDataFolder.create(recursive: true);
@@ -81,7 +82,7 @@ class AudioOpsController {
     return audioSnippetsFolder.path;
   }
 
-  void requestClassification(String snippetPath) async {
+  Future<void> requestClassification(String snippetPath) async {
     AudioSnippet audioSnippet = AudioSnippet(snippetPath);
     audioSnippet = await _setAudioSnippetDuration(audioSnippet);
     await audioSnippet.readFileBytes();
