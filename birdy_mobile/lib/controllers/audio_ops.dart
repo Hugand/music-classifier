@@ -67,6 +67,10 @@ class AudioOpsController {
     try {
       await _audioPlayer.setFilePath(audioSnippet.filePath);
       await _audioPlayer.play();
+
+      // Audio need to be stopped else the next time it is played
+      // the .play() method won't be awaited
+      await _audioPlayer.stop();
     } catch(e) {
       log(e.toString());
       return;

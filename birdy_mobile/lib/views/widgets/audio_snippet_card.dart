@@ -21,13 +21,11 @@ class _AudioSnippetCardState extends State<AudioSnippetCard> {
 
   void _incrementProgress(int maxValue, DateTime startTime) {
     int timePassed = DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch;
-    
     setState(() { 
       _playbackPosition = 1 - (timePassed / maxValue);
     });
   }
 
-  // TODO: Some bug in this method
   void _handlePlayAudioSnippet() async {
     setState(() { _playbackPosition = 0; });
     DateTime startTime = DateTime.now();
