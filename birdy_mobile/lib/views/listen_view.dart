@@ -3,6 +3,7 @@ import 'package:birdy_mobile/controllers/audio_ops.dart';
 import 'package:birdy_mobile/model/audio_snippet.dart';
 import 'package:birdy_mobile/res/colors.dart';
 import 'package:birdy_mobile/views/widgets/audio_snippet_card.dart';
+import 'package:birdy_mobile/views/widgets/results_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -43,72 +44,7 @@ class _ListenViewState extends State<ListenView> {
     showDialog(
       context: context,
       builder: (BuildContext builderContext) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 92),
-                child: const Text("Results",
-                  style: TextStyle(
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.bold
-                  )
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(8.0),
-                child: AudioSnippetCard(audioSnippet: audioSnippet),
-              ),
-              
-              Container(
-                margin: const EdgeInsets.fromLTRB(50, 136.0, 50, 20),
-                child: const Divider(height: 2, color: Colors.black),
-              ),
-
-              const Text("Evaluate"),
-              
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 5, 0, 40),
-                child: Row(children: [
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {}, // Handle your callback
-                    child: Ink(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(30.0),
-                        border: Border.all(color: CustomColors.red, width: 2)
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/img/cross.svg',
-                        color: CustomColors.red,
-                      )
-                    )
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {}, // Handle your callback
-                    child: Ink(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(30.0),
-                        border: Border.all(color: CustomColors.green, width: 2)
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/img/check.svg',
-                        color: CustomColors.green,
-                      )
-                    )
-                  ),
-                  const Spacer(),
-                ]),
-              )
-            ])
-          );
+        return ResultsDialog(audioSnippet: audioSnippet);
       });
   }
 
