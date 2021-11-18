@@ -51,7 +51,7 @@ class _ListenViewState extends State<ListenView> {
   @override
   Widget build(BuildContext context) {
     // getFiles();
-    show();
+    // show();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

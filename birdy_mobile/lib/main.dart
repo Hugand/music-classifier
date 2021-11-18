@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         title: Text(
           widget.title,
           style: const TextStyle(
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.black,
         items: <BottomNavigationBarItem>[
           BottomNavItem.build('Listen', 'assets/img/headphones.png', _selectedMenuItem == 0),
-          BottomNavItem.build('History', 'assets/img/history-icon.png', _selectedMenuItem == 0),
+          BottomNavItem.build('History', 'assets/img/history-icon.png', _selectedMenuItem == 1),
         ],
         currentIndex: _selectedMenuItem,
         selectedItemColor: Colors.white,

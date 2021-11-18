@@ -30,11 +30,18 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ListView.builder(
-        itemCount: _audioSnippets.length,
-        itemBuilder: (context, i) {
-          return ListTile(
-            title: AudioSnippetCard(audioSnippet: _audioSnippets[i]),
+      child: RefreshIndicator(
+        child: ListView.builder(
+          itemCount: _audioSnippets.length,
+          itemBuilder: (context, i) {
+            return ListTile(
+              title: AudioSnippetCard(audioSnippet: _audioSnippets[i]),
+            );
+          },
+        ),
+        onRefresh: () {
+          return Future.delayed(const Duration(seconds: 1), 
+            _loadHistory
           );
         },
       )
