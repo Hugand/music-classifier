@@ -28,8 +28,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAll = exports.create = void 0;
+exports.classify = exports.getAll = exports.create = void 0;
 const datasetDAL = __importStar(require("../db/dal/dataset.dal"));
+const MockMethods_1 = require("./mocks/MockMethods");
 const create = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return yield datasetDAL.create(payload);
 });
@@ -38,3 +39,14 @@ const getAll = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield datasetDAL.getAll();
 });
 exports.getAll = getAll;
+const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const classifiedResults = MockMethods_1.MockMethods.getFlaskResults();
+    yield classifiedResults.save();
+    const result = yield (0, exports.getAll)();
+    console.log(req.files);
+    return res.status(200).send({
+        status: true,
+        result
+    });
+});
+exports.classify = classify;

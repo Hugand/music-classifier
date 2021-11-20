@@ -7,15 +7,6 @@ datasetRouter.get('/', async (_req: Request, res: Response) => {
   return res.status(200).send(result)
 })
 
-datasetRouter.post('/', async (req: Request, res: Response) => {
-  const result = await datasetController.getAll()
-
-  console.log(req.files)
-
-  return res.status(200).send({
-    status: true,
-    result
-  })
-})
+datasetRouter.post('/', datasetController.classify)
 
 export default datasetRouter

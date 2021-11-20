@@ -35,12 +35,5 @@ datasetRouter.get('/', (_req, res) => __awaiter(void 0, void 0, void 0, function
     const result = yield datasetController.getAll();
     return res.status(200).send(result);
 }));
-datasetRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield datasetController.getAll();
-    console.log(req.files);
-    return res.status(200).send({
-        status: true,
-        result
-    });
-}));
+datasetRouter.post('/', datasetController.classify);
 exports.default = datasetRouter;

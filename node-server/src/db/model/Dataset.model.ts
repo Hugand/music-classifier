@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import sequelizeConnection from '../db.config';
 
-interface DatasetAttributes {
+export interface DatasetAttributes {
   id: number;
   seen_by_model: boolean;
   chroma_stft_mean: number;
@@ -64,7 +64,7 @@ interface DatasetAttributes {
   label: number;
 }
 export interface DatasetInput extends Required<DatasetAttributes> {}
-export interface DatasetOuput extends Required<DatasetAttributes> {}
+export interface DatasetOuput extends Required<DatasetAttributes> { }
 
 class Dataset extends Model<DatasetAttributes, DatasetInput> implements DatasetAttributes {
   public seen_by_model!: boolean;
