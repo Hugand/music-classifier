@@ -8,7 +8,7 @@ export class Api {
     const formData = new FormData()
     formData.append('audioFile', Buffer.from(audioFile.data), audioFile.name)
 
-    const classifiedResultsAttributes: DatasetAttributes = await (fetch(`${process.env.MODEL_SERVICE}/classifyAudio`, {
+    const classifiedResultsAttributes: DatasetAttributes = await (fetch(`${process.env.MODEL_SERVICE}/audio/classify`, {
       method: 'POST',
       body: formData as any,
     }).then((res: any) => res.json()))

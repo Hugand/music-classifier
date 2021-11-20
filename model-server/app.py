@@ -5,7 +5,7 @@ from model.audio import Audio
 
 app = Flask(__name__)
 
-@app.route("/classifyAudio", methods=['POST'])
+@app.route("/audio/classify", methods=['POST'])
 def classify_audio():
     print(request.files)
     audioFile = request.files['audioFile']
