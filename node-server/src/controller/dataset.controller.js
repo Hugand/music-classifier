@@ -30,7 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classify = exports.getAll = exports.create = void 0;
 const datasetDAL = __importStar(require("../db/dal/dataset.dal"));
-const MockMethods_1 = require("./mocks/MockMethods");
+const Api_1 = require("../api/Api");
 const create = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return yield datasetDAL.create(payload);
 });
@@ -40,10 +40,13 @@ const getAll = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getAll = getAll;
 const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const classifiedResults = MockMethods_1.MockMethods.getFlaskResults();
+    var _a, _b;
+    if (!req.files || !((_a = req.files) === null || _a === void 0 ? void 0 : _a.audioFile))
+        res.status(400).send();
+    const classifiedResults = yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile);
     yield classifiedResults.save();
     const result = yield (0, exports.getAll)();
-    console.log(req.files);
+    console.log();
     return res.status(200).send({
         status: true,
         result
