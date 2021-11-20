@@ -8,15 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Api = void 0;
-const MockMethods_1 = require("../controller/mocks/MockMethods");
+const Dataset_model_1 = __importDefault(require("../db/model/Dataset.model"));
+const form_data_1 = __importDefault(require("form-data"));
+const cross_fetch_1 = __importDefault(require("cross-fetch"));
 class Api {
     static getAudioClassification(audioFile) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Make http request
-            const classifiedResults = MockMethods_1.MockMethods.getFlaskResults();
-            return classifiedResults;
+            const formData = new form_data_1.default();
+            formData.append('audioFile', Buffer.from(audioFile.data), audioFile.name);
+            const classifiedResultsAttributes = yield ((0, cross_fetch_1.default)(`${process.env.MODEL_SERVICE}/classifyAudio`, {
+                method: 'POST',
+                body: formData,
+            }).then((res) => res.json()));
+            return new Dataset_model_1.default(classifiedResultsAttributes);
         });
     }
 }

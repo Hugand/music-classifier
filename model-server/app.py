@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/classifyAudio", methods=['POST'])
 def classify_audio():
-    print("hello")
+    print(request.files)
     audioFile = request.files['audioFile']
     filename = secure_filename(audioFile.filename)
     file_path = os.path.join('tmp_audio_files', filename)
@@ -16,7 +16,7 @@ def classify_audio():
     audio = Audio(file_path)
     audio.extract_features()
 
-    # Remove audio tmp file
+    os.remove(file_path)
     
     return jsonify(audio.data)
 
