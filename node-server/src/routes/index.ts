@@ -3,6 +3,6 @@ import datasetRouter from './dataset.routes'
 
 const router = Router()
 
-router.use('/dataset', datasetRouter)
+router.use('/classifier', datasetRouter)
 
 export default router
