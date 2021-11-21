@@ -21,7 +21,7 @@ class Api {
         return __awaiter(this, void 0, void 0, function* () {
             const formData = new form_data_1.default();
             formData.append('audioFile', Buffer.from(audioFile.data), audioFile.name);
-            const classifiedResultsAttributes = yield ((0, cross_fetch_1.default)(`${process.env.MODEL_SERVICE}/classifyAudio`, {
+            const classifiedResultsAttributes = yield ((0, cross_fetch_1.default)(`${process.env.MODEL_SERVICE}/audio/classify`, {
                 method: 'POST',
                 body: formData,
             }).then((res) => res.json()));

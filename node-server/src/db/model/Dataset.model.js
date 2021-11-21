@@ -73,14 +73,14 @@ Dataset.init({
         type: sequelize_1.DataTypes.DOUBLE,
         allowNull: false,
     },
-    perceptr_mean: {
-        type: sequelize_1.DataTypes.DOUBLE,
-        allowNull: false,
-    },
-    perceptr_var: {
-        type: sequelize_1.DataTypes.DOUBLE,
-        allowNull: false,
-    },
+    // perceptr_mean: {
+    //   type: DataTypes.DOUBLE,
+    //   allowNull: false,
+    // },
+    // perceptr_var: {
+    //   type: DataTypes.DOUBLE,
+    //   allowNull: false,
+    // },
     tempo: {
         type: sequelize_1.DataTypes.DOUBLE,
         allowNull: false,

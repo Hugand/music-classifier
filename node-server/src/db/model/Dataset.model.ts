@@ -18,8 +18,8 @@ export interface DatasetAttributes {
   zero_crossing_rate_var: number;
   harmony_mean: number;
   harmony_var: number;
-  perceptr_mean: number;
-  perceptr_var: number;
+  // perceptr_mean: number;
+  // perceptr_var: number;
   tempo: number;
   mfcc1_mean: number;
   mfcc1_var: number;
@@ -82,8 +82,8 @@ class Dataset extends Model<DatasetAttributes, DatasetInput> implements DatasetA
   public zero_crossing_rate_var!: number;
   public harmony_mean!: number;
   public harmony_var!: number;
-  public perceptr_mean!: number;
-  public perceptr_var!: number;
+  // public perceptr_mean!: number;
+  // public perceptr_var!: number;
   public tempo!: number;
   public mfcc1_mean!: number;
   public mfcc1_var!: number;
@@ -195,14 +195,14 @@ Dataset.init({
     type: DataTypes.DOUBLE,
     allowNull: false,
   },
-  perceptr_mean: {
-    type: DataTypes.DOUBLE,
-    allowNull: false,
-  },
-  perceptr_var: {
-    type: DataTypes.DOUBLE,
-    allowNull: false,
-  },
+  // perceptr_mean: {
+  //   type: DataTypes.DOUBLE,
+  //   allowNull: false,
+  // },
+  // perceptr_var: {
+  //   type: DataTypes.DOUBLE,
+  //   allowNull: false,
+  // },
   tempo: {
     type: DataTypes.DOUBLE,
     allowNull: false,

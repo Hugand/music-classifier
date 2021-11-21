@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, json, jsonify, request
 from werkzeug.utils import secure_filename
 from model.audio import Audio
 
@@ -17,7 +17,10 @@ def classify_audio():
     audio.extract_features()
 
     os.remove(file_path)
+
+    print(audio.data)
     
+    # return jsonify(json.dumps(str(audio.data)))
     return jsonify(audio.data)
 
 if __name__ == '__main__':
