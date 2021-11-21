@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.classify = exports.getAll = exports.create = void 0;
+exports.classify = exports.seed = exports.getAll = exports.create = void 0;
 const datasetDAL = __importStar(require("../db/dal/dataset.dal"));
 const Api_1 = require("../api/Api");
 const create = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,6 +39,16 @@ const getAll = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield datasetDAL.getAll();
 });
 exports.getAll = getAll;
+const seed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const classifiedResults = yield Api_1.Api.seed();
+    classifiedResults.forEach((d) => __awaiter(void 0, void 0, void 0, function* () {
+        yield d.save();
+    }));
+    return res.status(200).send({
+        status: true,
+    });
+});
+exports.seed = seed;
 const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     if (!req.files || !((_a = req.files) === null || _a === void 0 ? void 0 : _a.audioFile))
@@ -46,7 +56,6 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const classifiedResults = yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile);
     yield classifiedResults.save();
     const result = yield (0, exports.getAll)();
-    console.log();
     return res.status(200).send({
         status: true,
         result

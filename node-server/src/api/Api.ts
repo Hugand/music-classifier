@@ -4,6 +4,21 @@ import FormData from 'form-data';
 import fetch from 'cross-fetch';
 
 export class Api {
+  public static async seed(): Promise<Dataset[]> {
+    const datasetEntries: DatasetAttributes[] = await (fetch(`${process.env.MODEL_SERVICE}/audio/seed`, {
+      method: 'GET',
+    }).then((res: any) => res.json()))
+
+    const dataset: Dataset[] = []
+
+    datasetEntries.forEach((d: DatasetAttributes) => {
+      d.seen_by_model = true
+      dataset.push(new Dataset(d))
+    })
+
+    return dataset
+  }
+
   public static async getAudioClassification(audioFile: UploadedFile): Promise<Dataset> {
     const formData = new FormData()
     formData.append('audioFile', Buffer.from(audioFile.data), audioFile.name)

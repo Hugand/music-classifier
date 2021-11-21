@@ -93,8 +93,6 @@ class AudioFeatures:
     def extract_tempo(self):
         tempo_val = tempo(self.x, sr=self.sr)[0]
 
-        print("Tempo: ", tempo_val)
-        
         return { 'tempo': float(tempo_val) }
 
     def extract_harmony(self):

@@ -23,5 +23,32 @@ def classify_audio():
     # return jsonify(json.dumps(str(audio.data)))
     return jsonify(audio.data)
 
+@app.route("/audio/seed", methods=['GET'])
+def seed():
+
+    features = []
+
+    for d in os.walk('../Data/sampled_tracks/'):
+        curr_genre = d[0].split('/')[-1]
+        print(d[0])
+
+        if curr_genre == '': continue
+        i = 0
+        for track in d[2]:
+            path = d[0] + '/' + track
+
+            audio = Audio(path, label = curr_genre)
+            audio.extract_features()
+
+            # audio.data['label'] = labels.index(curr_genre)
+
+            features.append(audio.data)
+            
+            print(curr_genre, i, audio.data['label'])
+
+            i += 1
+
+    return jsonify(features)
+
 if __name__ == '__main__':
      app.run(port=8080)

@@ -13,6 +13,18 @@ export const getAll = async (): Promise<DatasetOuput[]> => {
   return await datasetDAL.getAll()
 }
 
+export const seed = async (req: Request, res: Response) => {
+  const classifiedResults: Dataset[] = await Api.seed();
+
+  classifiedResults.forEach(async (d: Dataset) => {
+    await d.save()
+  })
+
+  return res.status(200).send({
+    status: true,
+  })
+}
+
 export const classify = async (req: Request, res: Response) => {
   if (!req.files || !req.files?.audioFile) res.status(400).send()
   
@@ -20,7 +32,6 @@ export const classify = async (req: Request, res: Response) => {
   await classifiedResults.save()
 
   const result = await getAll()
-  console.log()
 
   return res.status(200).send({
     status: true,

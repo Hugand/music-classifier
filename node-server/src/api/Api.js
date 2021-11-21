@@ -17,6 +17,19 @@ const Dataset_model_1 = __importDefault(require("../db/model/Dataset.model"));
 const form_data_1 = __importDefault(require("form-data"));
 const cross_fetch_1 = __importDefault(require("cross-fetch"));
 class Api {
+    static seed() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const datasetEntries = yield ((0, cross_fetch_1.default)(`${process.env.MODEL_SERVICE}/audio/seed`, {
+                method: 'GET',
+            }).then((res) => res.json()));
+            const dataset = [];
+            datasetEntries.forEach((d) => {
+                d.seen_by_model = true;
+                dataset.push(new Dataset_model_1.default(d));
+            });
+            return dataset;
+        });
+    }
     static getAudioClassification(audioFile) {
         return __awaiter(this, void 0, void 0, function* () {
             const formData = new form_data_1.default();

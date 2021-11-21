@@ -35,5 +35,6 @@ datasetRouter.get('/', (_req, res) => __awaiter(void 0, void 0, void 0, function
     const result = yield datasetController.getAll();
     return res.status(200).send(result);
 }));
+datasetRouter.get('/seed', datasetController.seed);
 datasetRouter.post('/', datasetController.classify);
 exports.default = datasetRouter;
