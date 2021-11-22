@@ -6,28 +6,28 @@ class AudioFeatures:
     features = {}
 
     def __init__(self, audio_path):
-        self.load_audio(audio_path)
+        self.__load_audio(audio_path)
 
-    def load_audio(self, audio_path):
+    def __load_audio(self, audio_path):
         self.audio_path = audio_path
         self.x, self.sr = librosa.load(self.audio_path)
 
     def extract_from_audio(self):
         self.features = {
-            **self.extract_zero_crossing_rate(),
-            **self.extract_spectral_centroid(),
-            **self.extract_spectral_rolloff(),
-            **self.extract_spectral_bandwidth(),
-            **self.extract_chroma_stft(),
-            **self.extract_mfccs(),
-            **self.extract_rmse(),
-            **self.extract_tempo(),
-            **self.extract_harmony(),
+            **self.__extract_zero_crossing_rate(),
+            **self.__extract_spectral_centroid(),
+            **self.__extract_spectral_rolloff(),
+            **self.__extract_spectral_bandwidth(),
+            **self.__extract_chroma_stft(),
+            **self.__extract_mfccs(),
+            **self.__extract_rmse(),
+            **self.__extract_tempo(),
+            **self.__extract_harmony(),
         }
 
         return self.features
 
-    def extract_zero_crossing_rate(self):
+    def __extract_zero_crossing_rate(self):
         zero_crossings = np.array(librosa.zero_crossings(self.x, pad=False))
         
         return {
@@ -35,7 +35,7 @@ class AudioFeatures:
             'zero_crossing_rate_var': float(zero_crossings.var())
         }
 
-    def extract_spectral_centroid(self):
+    def __extract_spectral_centroid(self):
         spectral_centroids = np.array(spectral_centroid(self.x, sr=self.sr)[0])
 
         return {
@@ -43,7 +43,7 @@ class AudioFeatures:
             'spectral_centroid_var': float(spectral_centroids.var())
         }
 
-    def extract_spectral_rolloff(self):
+    def __extract_spectral_rolloff(self):
         spectral_rolloffs = np.array(spectral_rolloff(self.x, sr=self.sr)[0])
 
         return {
@@ -52,7 +52,7 @@ class AudioFeatures:
         }
 
 
-    def extract_spectral_bandwidth(self):
+    def __extract_spectral_bandwidth(self):
         spectral_bandwidths = np.array(spectral_bandwidth(self.x, sr=self.sr)[0])
 
         return {
@@ -60,7 +60,7 @@ class AudioFeatures:
             'spectral_bandwidth_var': float(spectral_bandwidths.var())
         }
 
-    def extract_chroma_stft(self):
+    def __extract_chroma_stft(self):
         hop_length = 512
         chroma_stfts = np.array(chroma_stft(self.x, sr=self.sr, hop_length=hop_length)[0])
 
@@ -69,7 +69,7 @@ class AudioFeatures:
             'chroma_stft_var': float(chroma_stfts.var())
         }
 
-    def extract_mfccs(self):
+    def __extract_mfccs(self):
         mfccs_data = np.array(mfcc(self.x, sr=self.sr))
         mfccs = {}
 
@@ -81,7 +81,7 @@ class AudioFeatures:
 
         return mfccs
 
-    def extract_rmse(self):
+    def __extract_rmse(self):
         rms_val = np.array(rms(self.x))
 
         return {
@@ -90,12 +90,12 @@ class AudioFeatures:
         }
 
     
-    def extract_tempo(self):
+    def __extract_tempo(self):
         tempo_val = tempo(self.x, sr=self.sr)[0]
 
         return { 'tempo': float(tempo_val) }
 
-    def extract_harmony(self):
+    def __extract_harmony(self):
         harmony = np.array(tonnetz(self.x, sr=self.sr))
 
         return {
