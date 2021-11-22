@@ -1,4 +1,5 @@
 import os
+from flask.wrappers import Request, Response
 from werkzeug.utils import secure_filename
 from flask import json, jsonify
 from model.audio import Audio
@@ -8,8 +9,7 @@ class AudioController:
     def __init__(self, audio_pipeline: AudioPipeline):
         self.audio_pipeline = audio_pipeline
 
-    def classify(self, request):
-        print(request.files)
+    def classify(self, request: Request) -> Response:
         audioFile = request.files['audioFile']
         filename = secure_filename(audioFile.filename)
         file_path = os.path.join('tmp_audio_files', filename)

@@ -1,5 +1,6 @@
 import joblib
 import pandas as pd
+from aliases import AudioData
 
 class MlModel:
     model_paths = {
@@ -17,26 +18,24 @@ class MlModel:
         'mfcc16_var', 'mfcc17_mean', 'mfcc17_var', 'mfcc18_mean', 'mfcc18_var', 'mfcc19_mean',
         'mfcc19_var', 'mfcc20_mean', 'mfcc20_var', 'label' ]
 
-    def __init__(self, model_type='knn'):
+    def __init__(self, model_type: str='knn'):
         self.model = None
         self.load(model_type)
 
-    def load(self, model_type='knn'):
+    def load(self, model_type: str='knn'):
         if model_type in self.model_paths.keys():
             self.model = joblib.load(self.model_paths[model_type])
-            return
         else:
             self.model = None
-            return
 
-    def predict_samples(self, samples_features):
+    def predict_samples(self, samples_features: 'list[AudioData]') -> 'list[int]':
         predictions = []
         for features in samples_features:
             predictions.append(self.predict(features))
 
         return predictions
 
-    def predict(self, features):
+    def predict(self, features: AudioData) -> int:
         if self.model == None: return {}
 
         features_df = pd.DataFrame(data=[features])

@@ -2,6 +2,7 @@ from model.audio import Audio
 from model.ml_model import MlModel
 from scipy import stats
 import numpy as np
+from aliases import AudioData
 
 class AudioPipeline:
     def __init__(self):
@@ -9,7 +10,7 @@ class AudioPipeline:
         self.ml_model.load()
 
     # TODO: Sampling is disabled for simplicity atm
-    def exec(self, filename, file_path,  sampling=False):
+    def exec(self, filename: str, file_path: str,  sampling: bool=False) -> AudioData:
         audio = Audio(filename, file_path)
 
         # Extract features
