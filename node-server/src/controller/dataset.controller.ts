@@ -3,6 +3,7 @@ import Dataset, { DatasetInput, DatasetOuput } from '../db/model/Dataset.model'
 import {  Request, Response} from 'express'
 import { Api } from '../api/Api'
 import { UploadedFile } from 'express-fileupload'
+import Genres from '../db/model/Genres.model'
 
 export const create = async (payload: DatasetInput): Promise<DatasetOuput> => {
   return await datasetDAL.create(payload)
@@ -28,13 +29,14 @@ export const classify = async (req: Request, res: Response) => {
   if (!req.files || !req.files?.audioFile) res.status(400).send()
   
   try {
-    const classificationResults: Dataset[] = await Api.getAudioClassification(req.files?.audioFile as UploadedFile);
-    classificationResults.forEach(async res => { await res.save() })
+    const classificationResults: Dataset = (await Api.getAudioClassification(req.files?.audioFile as UploadedFile))[0];
+    const insertedDatasetEntry: Dataset = await classificationResults.save()
+    const results = {
+      aid: insertedDatasetEntry.id,
+      genre: (await Genres.findByPk(insertedDatasetEntry.label))?.genre!!
+    }
   
-    return res.status(200).send({
-      status: true,
-      classificationResults
-    })
+    return res.status(200).send(results)
   } catch (e) {
     return res.status(500).send()
   }

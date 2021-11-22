@@ -246,8 +246,12 @@ Dataset.init({
         allowNull: false,
     },
     label: {
-        type: sequelize_1.DataTypes.DOUBLE,
+        type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
+        references: {
+            model: 'Genres',
+            key: 'id'
+        }
     },
 }, {
     timestamps: true,

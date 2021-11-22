@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import sequelizeConnection from '../db.config';
+import Genres from './Genres.model';
 
 export interface DatasetAttributes {
   id: number;
@@ -368,8 +369,12 @@ Dataset.init({
     allowNull: false,
   },
   label: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
+    references: {
+      model: 'Genres',
+      key: 'id'
+    }
   },
 }, {
   timestamps: true,

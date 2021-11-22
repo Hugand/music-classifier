@@ -86,7 +86,7 @@ class AudioOpsController {
     return audioSnippetsFolder.path;
   }
 
-  Future<void> requestClassification(String snippetPath) async {
+  Future<AudioSnippet> requestClassification(String snippetPath) async {
     AudioSnippet audioSnippet = AudioSnippet(snippetPath);
     audioSnippet = await _setAudioSnippetDuration(audioSnippet);
     await audioSnippet.readFileBytes();
@@ -97,6 +97,8 @@ class AudioOpsController {
 
     File newAudioFile = File('$audioSnippetsFilesPath/${audioSnippet.audioName}');
     await newAudioFile.writeAsString(encodedAudioSnippet);
+
+    return audioSnippet;
   }
 
   Future<List<AudioSnippet>> loadAudioSnippetsHistory() async {

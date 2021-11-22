@@ -27,10 +27,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classify = exports.seed = exports.getAll = exports.create = void 0;
 const datasetDAL = __importStar(require("../db/dal/dataset.dal"));
 const Api_1 = require("../api/Api");
+const Genres_model_1 = __importDefault(require("../db/model/Genres.model"));
 const create = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return yield datasetDAL.create(payload);
 });
@@ -50,16 +54,17 @@ const seed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.seed = seed;
 const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     if (!req.files || !((_a = req.files) === null || _a === void 0 ? void 0 : _a.audioFile))
         res.status(400).send();
     try {
-        const classificationResults = yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile);
-        classificationResults.forEach((res) => __awaiter(void 0, void 0, void 0, function* () { yield res.save(); }));
-        return res.status(200).send({
-            status: true,
-            classificationResults
-        });
+        const classificationResults = (yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile))[0];
+        const insertedDatasetEntry = yield classificationResults.save();
+        const results = {
+            aid: insertedDatasetEntry.id,
+            genre: (_c = (yield Genres_model_1.default.findByPk(insertedDatasetEntry.label))) === null || _c === void 0 ? void 0 : _c.genre
+        };
+        return res.status(200).send(results);
     }
     catch (e) {
         return res.status(500).send();

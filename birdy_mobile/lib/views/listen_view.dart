@@ -22,8 +22,8 @@ class _ListenViewState extends State<ListenView> {
     String snippetPath = await _audioOpsController.stopRecording();
     setState(() {  _recording = false; });
     // await _audioOpsController.playAudio(AudioSnippet(snippetPath));
-    await _audioOpsController.requestClassification(snippetPath);
-    _showDialog(context, AudioSnippet(snippetPath));
+    AudioSnippet newAudioSnippet = await _audioOpsController.requestClassification(snippetPath);
+    _showDialog(context, newAudioSnippet);
   }
 
   void _recordSnippet() async {
@@ -32,7 +32,7 @@ class _ListenViewState extends State<ListenView> {
       _recording = startRecordingResult;
     });
 
-    if(_recording) Timer(const Duration(seconds: 3), _handleStopRecording);
+    if(_recording) Timer(const Duration(seconds: 6), _handleStopRecording);
   }
 
   void show() async {
