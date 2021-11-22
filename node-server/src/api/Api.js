@@ -38,7 +38,7 @@ class Api {
                 method: 'POST',
                 body: formData,
             }).then((res) => res.json()));
-            return new Dataset_model_1.default(classifiedResultsAttributes);
+            return classifiedResultsAttributes.map(attr => new Dataset_model_1.default(attr));
         });
     }
 }

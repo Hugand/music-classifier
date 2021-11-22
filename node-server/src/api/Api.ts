@@ -19,15 +19,15 @@ export class Api {
     return dataset
   }
 
-  public static async getAudioClassification(audioFile: UploadedFile): Promise<Dataset> {
+  public static async getAudioClassification(audioFile: UploadedFile): Promise<Dataset[]> {
     const formData = new FormData()
     formData.append('audioFile', Buffer.from(audioFile.data), audioFile.name)
 
-    const classifiedResultsAttributes: DatasetAttributes = await (fetch(`${process.env.MODEL_SERVICE}/audio/classify`, {
+    const classifiedResultsAttributes: DatasetAttributes[] = await (fetch(`${process.env.MODEL_SERVICE}/audio/classify`, {
       method: 'POST',
       body: formData as any,
     }).then((res: any) => res.json()))
 
-    return new Dataset(classifiedResultsAttributes)
+    return classifiedResultsAttributes.map(attr => new Dataset(attr))
   }
 }

@@ -53,12 +53,16 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     if (!req.files || !((_a = req.files) === null || _a === void 0 ? void 0 : _a.audioFile))
         res.status(400).send();
-    const classifiedResults = yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile);
-    yield classifiedResults.save();
-    const result = yield (0, exports.getAll)();
-    return res.status(200).send({
-        status: true,
-        result
-    });
+    try {
+        const classificationResults = yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile);
+        classificationResults.forEach((res) => __awaiter(void 0, void 0, void 0, function* () { yield res.save(); }));
+        return res.status(200).send({
+            status: true,
+            classificationResults
+        });
+    }
+    catch (e) {
+        return res.status(500).send();
+    }
 });
 exports.classify = classify;
