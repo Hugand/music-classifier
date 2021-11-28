@@ -44,10 +44,13 @@ const getAll = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getAll = getAll;
 const seed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Starting seed");
     const classifiedResults = yield Api_1.Api.seed();
+    console.log("Finishing seed");
     classifiedResults.forEach((d) => __awaiter(void 0, void 0, void 0, function* () {
         yield d.save();
     }));
+    console.log("Saved");
     return res.status(200).send({
         status: true,
     });

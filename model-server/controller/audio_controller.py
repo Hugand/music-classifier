@@ -26,21 +26,25 @@ class AudioController:
     def seed(self):
         features = []
 
-        for d in os.walk('../Data/sampled_tracks/'):
+        for d in os.walk('../Data/sampled_tracks_4/'):
             curr_genre = d[0].split('/')[-1]
             print(d[0])
 
             if curr_genre == '': continue
             i = 0
             for track in d[2]:
-                path = d[0] + '/' + track
+                path = os.path.join(d[0], track)
+                print(path)
 
-                audio = Audio(path, label = curr_genre)
-                audio.extract_features()
+                try:
+                    audio = Audio(filename=track, audio_path=path, label = curr_genre)
+                    audio.extract_features_full_audio()
 
-                features.append(audio.data)
-                
-                print(curr_genre, i, audio.data['label'])
+                    features.append(audio.data[0])
+                    
+                    print(curr_genre, i, audio.data[0]['label'])
+                except:
+                    print("FAILED")
 
                 i += 1
 

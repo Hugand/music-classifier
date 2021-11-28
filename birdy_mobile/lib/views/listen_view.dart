@@ -32,7 +32,7 @@ class _ListenViewState extends State<ListenView> {
       _recording = startRecordingResult;
     });
 
-    if(_recording) Timer(const Duration(seconds: 6), _handleStopRecording);
+    if(_recording) Timer(const Duration(seconds: 11), _handleStopRecording);
   }
 
   void show() async {

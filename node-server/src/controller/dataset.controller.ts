@@ -14,11 +14,14 @@ export const getAll = async (): Promise<DatasetOuput[]> => {
 }
 
 export const seed = async (req: Request, res: Response) => {
+  console.log("Starting seed")
   const classifiedResults: Dataset[] = await Api.seed();
+  console.log("Finishing seed")
 
   classifiedResults.forEach(async (d: Dataset) => {
     await d.save()
   })
+  console.log("Saved")
 
   return res.status(200).send({
     status: true,

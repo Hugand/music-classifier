@@ -34,14 +34,13 @@ class Audio:
     
     #     return self.data
 
-    def extract_features_full_audio(self, path: str=None) -> 'list[AudioData]':
-        self.data = [self.__extract_features()]
+    def extract_features_full_audio(self, path: str='') -> 'list[AudioData]':
+        self.data = [self.__extract_features(path)]
 
         return self.data
 
-    def __extract_features(self, path: str=None) -> AudioData:
-        if path == None: path = self.audio_path
-
+    def __extract_features(self, path: str='') -> AudioData:
+        if path == '': path = self.audio_path
         audio_features = AudioFeatures(path)
         features = audio_features.extract_from_audio()
 

@@ -6,8 +6,7 @@ from aliases import AudioData
 
 class AudioPipeline:
     def __init__(self):
-        self.ml_model = MlModel()
-        self.ml_model.load()
+        self.ml_model = MlModel(model_type='knn')
 
     # TODO: Sampling is disabled for simplicity atm
     def exec(self, filename: str, file_path: str,  sampling: bool=False) -> AudioData:
