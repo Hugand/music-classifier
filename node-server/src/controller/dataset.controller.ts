@@ -1,15 +1,15 @@
 import * as datasetDAL from '../db/dal/dataset.dal'
-import Dataset, { DatasetInput, DatasetOuput } from '../db/model/Dataset.model'
+import * as genresDAL from '../db/dal/genres.dal'
+import Dataset, { DatasetInput, DatasetOutput } from '../db/model/Dataset.model'
 import {  Request, Response} from 'express'
 import { Api } from '../api/Api'
 import { UploadedFile } from 'express-fileupload'
-import Genres from '../db/model/Genres.model'
 
-export const create = async (payload: DatasetInput): Promise<DatasetOuput> => {
+export const create = async (payload: DatasetInput): Promise<DatasetOutput> => {
   return await datasetDAL.create(payload)
 }
 
-export const getAll = async (): Promise<DatasetOuput[]> => {
+export const getAll = async (): Promise<DatasetOutput[]> => {
   return await datasetDAL.getAll()
 }
 
@@ -36,7 +36,7 @@ export const classify = async (req: Request, res: Response) => {
     const insertedDatasetEntry: Dataset = await classificationResults.save()
     const results = {
       aid: insertedDatasetEntry.id,
-      genre: (await Genres.findByPk(insertedDatasetEntry.label))?.genre!!
+      genre: (await genresDAL.getByPk(insertedDatasetEntry.label))?.genre!!
     }
   
     return res.status(200).send(results)
@@ -44,3 +44,16 @@ export const classify = async (req: Request, res: Response) => {
     return res.status(500).send()
   }
 }
+
+export const evaluate = async (req: Request, res: Response) => {
+  
+  try {
+    const genre = await genresDAL.getOne({ where: { genre: req.body.correctLabel }})
+    await datasetDAL.update({ label: genre.id }, { where: {id: req.body.aid}})
+    
+    return res.status(200).send()
+  } catch (e) {
+    return res.status(500).send()
+  }
+}
+

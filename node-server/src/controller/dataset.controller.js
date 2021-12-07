@@ -27,14 +27,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.classify = exports.seed = exports.getAll = exports.create = void 0;
+exports.evaluate = exports.classify = exports.seed = exports.getAll = exports.create = void 0;
 const datasetDAL = __importStar(require("../db/dal/dataset.dal"));
+const genresDAL = __importStar(require("../db/dal/genres.dal"));
 const Api_1 = require("../api/Api");
-const Genres_model_1 = __importDefault(require("../db/model/Genres.model"));
 const create = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return yield datasetDAL.create(payload);
 });
@@ -65,7 +62,7 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const insertedDatasetEntry = yield classificationResults.save();
         const results = {
             aid: insertedDatasetEntry.id,
-            genre: (_c = (yield Genres_model_1.default.findByPk(insertedDatasetEntry.label))) === null || _c === void 0 ? void 0 : _c.genre
+            genre: (_c = (yield genresDAL.getByPk(insertedDatasetEntry.label))) === null || _c === void 0 ? void 0 : _c.genre
         };
         return res.status(200).send(results);
     }
@@ -74,3 +71,14 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.classify = classify;
+const evaluate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const genre = yield genresDAL.getOne({ where: { genre: req.body.correctLabel } });
+        yield datasetDAL.update({ label: genre.id }, { where: { id: req.body.aid } });
+        return res.status(200).send();
+    }
+    catch (e) {
+        return res.status(500).send();
+    }
+});
+exports.evaluate = evaluate;

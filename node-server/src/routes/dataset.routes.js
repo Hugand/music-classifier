@@ -37,4 +37,5 @@ datasetRouter.get('/', (_req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 datasetRouter.get('/seed', datasetController.seed);
 datasetRouter.post('/', datasetController.classify);
+datasetRouter.post('/evaluate', datasetController.evaluate);
 exports.default = datasetRouter;

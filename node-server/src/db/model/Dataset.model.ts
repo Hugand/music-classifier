@@ -65,7 +65,7 @@ export interface DatasetAttributes {
   label: number;
 }
 export interface DatasetInput extends Required<DatasetAttributes> {}
-export interface DatasetOuput extends Required<DatasetAttributes> { }
+export interface DatasetOutput extends Required<DatasetAttributes> { }
 
 class Dataset extends Model<DatasetAttributes, DatasetInput> implements DatasetAttributes {
   public seen_by_model!: boolean;

@@ -10,5 +10,6 @@ datasetRouter.get('/', async (_req: Request, res: Response) => {
 datasetRouter.get('/seed', datasetController.seed)
 
 datasetRouter.post('/', datasetController.classify)
+datasetRouter.post('/evaluate', datasetController.evaluate)
 
 export default datasetRouter
