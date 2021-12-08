@@ -1,9 +1,4 @@
-from .mocks.mock_audio_data import MockAudioData
 from .audio_features import AudioFeatures
-from pydub import AudioSegment
-from scipy import stats
-import os
-import numpy as np
 from aliases import AudioData
 
 class Audio:

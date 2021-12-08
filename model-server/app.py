@@ -1,6 +1,4 @@
-import os
 from flask import Flask, json, jsonify, request
-from model.ml_model import MlModel
 from controller.audio_controller import AudioController
 from model.audio_pipeline import AudioPipeline
 from flask.wrappers import Request, Response
@@ -22,4 +20,4 @@ def seed() -> Response:
     return audio_controller.seed()
 
 if __name__ == '__main__':
-     app.run(port=8080)
+    app.run()

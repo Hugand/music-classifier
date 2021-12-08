@@ -1,7 +1,5 @@
 from model.audio import Audio
 from model.ml_model import MlModel
-from scipy import stats
-import numpy as np
 from aliases import AudioData
 
 class AudioPipeline:
