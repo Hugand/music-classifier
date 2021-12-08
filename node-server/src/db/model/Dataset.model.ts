@@ -1,10 +1,10 @@
-import { DataTypes, Model, Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import sequelizeConnection from '../db.config';
-import Genres from './Genres.model';
 
 export interface DatasetAttributes {
   id: number;
   seen_by_model: boolean;
+  evaluated: boolean;
   chroma_stft_mean: number;
   chroma_stft_var: number;
   rms_mean: number;
@@ -19,8 +19,6 @@ export interface DatasetAttributes {
   zero_crossing_rate_var: number;
   harmony_mean: number;
   harmony_var: number;
-  // perceptr_mean: number;
-  // perceptr_var: number;
   tempo: number;
   mfcc1_mean: number;
   mfcc1_var: number;
@@ -69,6 +67,7 @@ export interface DatasetOutput extends Required<DatasetAttributes> { }
 
 class Dataset extends Model<DatasetAttributes, DatasetInput> implements DatasetAttributes {
   public seen_by_model!: boolean;
+  public evaluated!: boolean;
   public chroma_stft_mean!: number;
   public chroma_stft_var!: number;
   public rms_mean!: number;
@@ -139,6 +138,12 @@ Dataset.init({
   seen_by_model: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: false
+  },
+  evaluated: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   },
   chroma_stft_mean: {
     type: DataTypes.DOUBLE,
@@ -196,14 +201,6 @@ Dataset.init({
     type: DataTypes.DOUBLE,
     allowNull: false,
   },
-  // perceptr_mean: {
-  //   type: DataTypes.DOUBLE,
-  //   allowNull: false,
-  // },
-  // perceptr_var: {
-  //   type: DataTypes.DOUBLE,
-  //   allowNull: false,
-  // },
   tempo: {
     type: DataTypes.DOUBLE,
     allowNull: false,

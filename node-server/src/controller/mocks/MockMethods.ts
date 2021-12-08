@@ -5,6 +5,7 @@ export class MockMethods {
     const audioResults: DatasetAttributes = {
       id: 0,
       seen_by_model: false,
+      evaluated: false,
       chroma_stft_mean: (Math.random() * 20) - 10,
       chroma_stft_var: (Math.random() * 20) - 10,
       rms_mean: (Math.random() * 20) - 10,
@@ -19,8 +20,6 @@ export class MockMethods {
       zero_crossing_rate_var: (Math.random() * 20) - 10,
       harmony_mean: (Math.random() * 20) - 10,
       harmony_var: (Math.random() * 20) - 10,
-      // perceptr_mean: (Math.random() * 20) - 10,
-      // perceptr_var: (Math.random() * 20) - 10,
       tempo: (Math.random() * 20) - 10,
       mfcc1_mean: (Math.random() * 20) - 10,
       mfcc1_var: (Math.random() * 20) - 10,

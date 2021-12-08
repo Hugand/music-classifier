@@ -16,6 +16,12 @@ Dataset.init({
     seen_by_model: {
         type: sequelize_1.DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false
+    },
+    evaluated: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     },
     chroma_stft_mean: {
         type: sequelize_1.DataTypes.DOUBLE,
@@ -73,14 +79,6 @@ Dataset.init({
         type: sequelize_1.DataTypes.DOUBLE,
         allowNull: false,
     },
-    // perceptr_mean: {
-    //   type: DataTypes.DOUBLE,
-    //   allowNull: false,
-    // },
-    // perceptr_var: {
-    //   type: DataTypes.DOUBLE,
-    //   allowNull: false,
-    // },
     tempo: {
         type: sequelize_1.DataTypes.DOUBLE,
         allowNull: false,
