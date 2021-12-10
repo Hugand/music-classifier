@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'views/widgets/bottom_nav_item.dart';
 import 'views/listen_view.dart';
 import 'res/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: "assets/.env");
   runApp(const MyApp());
 }
 

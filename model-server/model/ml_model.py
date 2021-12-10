@@ -75,7 +75,7 @@ class MlModel:
             prediction = np.argmax(prediction)
             print(prediction)
         else:
-            prediction = self.model.predict(features_df)[0]
+            prediction = self.model.predict(features_df.values)[0]
 
         return prediction
 

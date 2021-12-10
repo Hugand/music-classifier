@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:birdy_mobile/helpers.dart';
 import 'package:birdy_mobile/model/audio_snippet.dart';
+import 'package:birdy_mobile/model/result_evaluation_api_result.dart';
 import 'package:birdy_mobile/net/api.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -89,7 +90,7 @@ class AudioOpsController {
   Future<AudioSnippet> requestClassification(String snippetPath) async {
     AudioSnippet audioSnippet = AudioSnippet(snippetPath);
     audioSnippet = await _setAudioSnippetDuration(audioSnippet);
-    await audioSnippet.readFileBytes();
+    // await audioSnippet.readFileBytes();
     
     audioSnippet = await Api.makePrediction(audioSnippet);
     String encodedAudioSnippet = jsonEncode(audioSnippet);
@@ -99,6 +100,31 @@ class AudioOpsController {
     await newAudioFile.writeAsString(encodedAudioSnippet);
 
     return audioSnippet;
+  }
+
+  Future<ResultEvaluationApiResult> evaluateResult(AudioSnippet audioSnippet, String correctGenre) async {
+  ResultEvaluationApiResult resultEvalResult;
+    try {
+      resultEvalResult = await Api.evaluateResult(audioSnippet.aid, correctGenre);
+    } on Exception catch (_) {
+      print(_);
+      return ResultEvaluationApiResult.empty();
+    }
+
+    if(resultEvalResult.success) {
+      audioSnippet.setGenre(resultEvalResult.genre);
+      await _updateAudioSnippetFile(audioSnippet);
+    }
+
+    return resultEvalResult;
+  }
+
+  // Maybe this can be also called in the prediction method
+  Future<void> _updateAudioSnippetFile(AudioSnippet audioSnippet) async {
+    File newAudioFile = File(audioSnippet.filePath);
+    String encodedAudioSnippet = jsonEncode(audioSnippet);
+
+    await newAudioFile.writeAsString(encodedAudioSnippet);
   }
 
   Future<List<AudioSnippet>> loadAudioSnippetsHistory() async {

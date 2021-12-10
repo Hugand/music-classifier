@@ -9,6 +9,7 @@ class AudioApiResults {
   }
 
   String get genre => _genre;
+  int get aid => _aid;
 
   factory AudioApiResults.fromJson(dynamic json) {
     return AudioApiResults(json['aid'] as int, json['genre'] as String);

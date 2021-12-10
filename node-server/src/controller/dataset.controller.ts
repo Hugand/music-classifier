@@ -46,14 +46,13 @@ export const classify = async (req: Request, res: Response) => {
 }
 
 export const evaluate = async (req: Request, res: Response) => {
-  
+  const genre = await genresDAL.getOne({ where: { genre: req.body.correctLabel } })
   try {
-    const genre = await genresDAL.getOne({ where: { genre: req.body.correctLabel }})
-    await datasetDAL.update({ label: genre.id }, { where: {id: req.body.aid}})
-    
-    return res.status(200).send()
-  } catch (e) {
-    return res.status(500).send()
+    await datasetDAL.update({ label: genre.id, evaluated: true }, { where: {id: req.body.aid}})
+  } catch (_) {
+    return res.status(200).send({ aid: parseInt(req.body.aid), genre: genre.genre, success: false });
   }
+  
+  return res.status(200).send({ aid: req.body.aid, genre: genre.genre, success: true });
 }
 

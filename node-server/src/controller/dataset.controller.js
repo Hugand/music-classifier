@@ -72,13 +72,13 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.classify = classify;
 const evaluate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const genre = yield genresDAL.getOne({ where: { genre: req.body.correctLabel } });
     try {
-        const genre = yield genresDAL.getOne({ where: { genre: req.body.correctLabel } });
-        yield datasetDAL.update({ label: genre.id }, { where: { id: req.body.aid } });
-        return res.status(200).send();
+        yield datasetDAL.update({ label: genre.id, evaluated: true }, { where: { id: req.body.aid } });
     }
-    catch (e) {
-        return res.status(500).send();
+    catch (_) {
+        return res.status(200).send({ aid: parseInt(req.body.aid), genre: genre.genre, success: false });
     }
+    return res.status(200).send({ aid: req.body.aid, genre: genre.genre, success: true });
 });
 exports.evaluate = evaluate;

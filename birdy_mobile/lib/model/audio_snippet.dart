@@ -8,6 +8,7 @@ class AudioSnippet {
   String _genre = '';
   DateTime _dateTime = DateTime.now();
   int _duration = 0;
+  int _aid = -1;
   // Uint8List _bytes = Uint8List(0);
 
   AudioSnippet(String filePath) {
@@ -23,6 +24,7 @@ class AudioSnippet {
   String get filePath => _filePath;
   String get genre => _genre;
   int get duration => _duration;
+  int get aid => _aid;
   String get date {
     return '${_dateTime.day}/${_dateTime.month}/${_dateTime.year}';
   }
@@ -31,19 +33,23 @@ class AudioSnippet {
     _duration = duration;
   }
 
-  Future<void> readFileBytes() async {
-    Uri myUri = Uri.parse(_filePath);
-    File audioFile = File.fromUri(myUri);
-    _dateTime = await audioFile.lastModified();
-    
-    try {
-      final value = await audioFile.readAsBytes();
-      // _bytes = Uint8List.fromList(value); 
-      log('reading of bytes is completed');
-    } catch(e) {
-      log('Error reading audio file: $e');
-    }
+  void setAid(int aid) {
+    _aid = aid;
   }
+
+  // Future<void> readFileBytes() async {
+  //   Uri myUri = Uri.parse(_filePath);
+  //   File audioFile = File.fromUri(myUri);
+  //   _dateTime = await audioFile.lastModified();
+    
+  //   try {
+  //     final value = await audioFile.readAsBytes();
+  //     // _bytes = Uint8List.fromList(value); 
+  //     log('reading of bytes is completed');
+  //   } catch(e) {
+  //     log('Error reading audio file: $e');
+  //   }
+  // }
 
   void setGenre(String genre) {
     _genre = genre;
@@ -53,6 +59,7 @@ class AudioSnippet {
       : _filePath = json['filePath'],
         _genre = json['genre'],
         _duration = json['duration'].toInt(),
+        _aid = json['aid'].toInt(),
         // _bytes =  Uint8List.fromList(json['bytes']),
         _dateTime = DateTime.parse(json['dateTime']);
 
@@ -61,11 +68,12 @@ class AudioSnippet {
     'genre': _genre,
     'dateTime': _dateTime.toUtc().toIso8601String(),
     'duration': _duration,
+    'aid': _aid,
     // 'bytes': _bytes
   };
 
   @override
   String toString() {
-    return '{ $_filePath, $_genre, $_dateTime}, ${_duration}';
+    return '{ $_aid, $_filePath, $_genre, $_dateTime}, $_duration';
   }
 }
