@@ -9,7 +9,7 @@ import 'package:birdy_mobile/model/audio_snippet.dart';
 class Api {
   static Future<AudioSnippet> makePrediction(AudioSnippet audioSnippet) async {
     // Make api call
-    var req = http.MultipartRequest('POST', Uri.parse('http://192.168.1.64:3001/api/v1/classifier'));
+    var req = http.MultipartRequest('POST', Uri.parse('https://birdy-backend.ugomes.com/api/v1/classifier'));
     req.files.add(await http.MultipartFile.fromPath('audioFile', audioSnippet.filePath));
 
     var res = await req.send();
