@@ -3,25 +3,23 @@ from flask.wrappers import Request, Response
 from werkzeug.utils import secure_filename
 from flask import json, jsonify
 from model.audio import Audio
+import numpy as np
 from model.audio_pipeline import AudioPipeline
+from model.np_encoder import NpEncoder
 
 class AudioController:
     def __init__(self, audio_pipeline: AudioPipeline):
         self.audio_pipeline = audio_pipeline
 
     def classify(self, request: Request) -> Response:
-        audioFile = request.files['audioFile']
-        filename = secure_filename(audioFile.filename)
-        file_path = os.path.join('tmp_audio_files', filename)
-        audioFile.save(file_path)
-        
-        audio_data = self.audio_pipeline.exec(filename, file_path)
+        audio = Audio(pipeline=self.audio_pipeline)
+        audio.save(request.files['audioFile'])
+        audio.classify()
+        os.remove(audio.file_path)
 
-        os.remove(file_path)
-
-        # return jsonify(json.dumps(audio_data))
-        return jsonify(audio_data)
-
+        print(audio.data)
+        return jsonify(json.dumps(audio.data, cls=NpEncoder))
+        # return jsonify(audio.data)
 
     def seed(self):
         features = []

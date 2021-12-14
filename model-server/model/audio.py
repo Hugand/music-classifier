@@ -1,31 +1,31 @@
-from .audio_features import AudioFeatures
+import os
+from sklearn.pipeline import Pipeline
+from werkzeug.utils import secure_filename
 from aliases import AudioData
 
 class Audio:
-    def __init__(self, filename:str='', audio_path:str = '', label: str = None):
-        self.data: list[AudioData] = []
-        self.filename = filename
-        self.audio_path = audio_path
+    data: AudioData = None
+    def __init__(self, file_path: str = '', pipeline: Pipeline = None, label: str = None):
         self.label = label
-        self.__labels = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+        self.file_path = file_path
+        self.pipeline = pipeline
 
-    def extract_features_full_audio(self, path: str='') -> 'list[AudioData]':
-        self.data = [self.__extract_features(path)]
+    def save(self, audio_file):
+        filename = secure_filename(audio_file.filename)
+        file_path = os.path.join('tmp_audio_files', filename)
+        audio_file.save(file_path)
+        self.file_path = file_path
 
-        return self.data
+    def classify(self) -> int:
+        if self.pipeline == None or self.file_path == None:
+            return None
 
-    def __extract_features(self, path: str='') -> AudioData:
-        if path == '': path = self.audio_path
-        audio_features = AudioFeatures(path)
-        features = audio_features.extract_from_audio()
+        prediction = self.pipeline.predict([self.file_path])[0]
+        extracted_features = self.pipeline.get_extracted_features()
 
-        label_encoding = -1
-        
-        if(self.label != None):
-            label_encoding = self.__labels.index(self.label)
-
-        return AudioData({
-            'label': label_encoding,
-            'seen_by_model': False,
-            **features
+        self.data = AudioData({
+            'label': prediction,
+            **extracted_features.loc[0].to_dict()
         })
+
+        return prediction

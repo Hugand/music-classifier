@@ -1,34 +1,34 @@
-from model.audio import Audio
-from model.ml_model import MlModel
+import joblib
+import pandas as pd
+from sklearn.pipeline import Pipeline
 from aliases import AudioData
+from tensorflow.keras.models import load_model
+import numpy as np
+from model.transformers.feature_imputer import FeatureImputer
+from model.transformers.fft_filter import FFT_Filter
+from model.transformers.audio_features_extractor import AudioFeaturesExtractor
+from model.audio import Audio
 
 class AudioPipeline:
+    model_path: str = './ml-models/knn_v3.pkl'
+    pipeline: Pipeline = None
+
     def __init__(self):
-        self.ml_model = MlModel(model_type='knn')
+        self.model = self.load()
+        self.pipeline = Pipeline(steps=[
+            ('fft_filter', FFT_Filter()),
+            ('features_extractor', AudioFeaturesExtractor()),
+            ('feature_imputer', FeatureImputer()),
+            ('classifier', self.model)
+        ])
 
-    # TODO: Sampling is disabled for simplicity atm
-    def exec(self, filename: str, file_path: str,  sampling: bool=False) -> AudioData:
-        audio = Audio(filename, file_path)
+    def load(self):
+        return joblib.load(self.model_path)
 
-        # Extract features
-        # if sampling:
-        #     audio.extract_features_sampled_audio()
-        # else:
-        audio.extract_features_full_audio()
+    def predict(self, audio_paths: list[str]) -> int:
+        if self.model == None: return {}
+        return self.pipeline.predict(audio_paths)
 
-        # Classification
-        # classifications = self.__classify(audio)
-        self.__classify(audio)
+    def get_extracted_features(self) -> pd.DataFrame:
+        return self.pipeline.named_steps['feature_imputer'].get_features()
 
-        # Combine
-        # final_classification = stats.mode(np.array(classifications))[0][0]
-
-        return audio.data
-
-
-    def __classify(self, audio: Audio):
-        classifications = self.ml_model.predict_samples(audio.data)
-        for i in range(len(audio.data)):
-            audio.data[i]['label'] = int(classifications[i])
-
-        # return classifications
