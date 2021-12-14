@@ -1,13 +1,10 @@
 import joblib
 import pandas as pd
 from sklearn.pipeline import Pipeline
-from aliases import AudioData
-from tensorflow.keras.models import load_model
 import numpy as np
 from model.transformers.feature_imputer import FeatureImputer
 from model.transformers.fft_filter import FFT_Filter
 from model.transformers.audio_features_extractor import AudioFeaturesExtractor
-from model.audio import Audio
 
 class AudioPipeline:
     model_path: str = './ml-models/knn_v3.pkl'
@@ -25,7 +22,7 @@ class AudioPipeline:
     def load(self):
         return joblib.load(self.model_path)
 
-    def predict(self, audio_paths: list[str]) -> int:
+    def predict(self, audio_paths):
         if self.model == None: return {}
         return self.pipeline.predict(audio_paths)
 
