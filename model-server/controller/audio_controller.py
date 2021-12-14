@@ -1,9 +1,7 @@
 import os
 from flask.wrappers import Request, Response
-from werkzeug.utils import secure_filename
 from flask import json, jsonify
 from model.audio import Audio
-import numpy as np
 from model.audio_pipeline import AudioPipeline
 from model.np_encoder import NpEncoder
 

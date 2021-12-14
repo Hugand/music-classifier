@@ -58,7 +58,7 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.files || !((_a = req.files) === null || _a === void 0 ? void 0 : _a.audioFile))
         res.status(400).send();
     try {
-        const classificationResults = (yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile))[0];
+        const classificationResults = (yield Api_1.Api.getAudioClassification((_b = req.files) === null || _b === void 0 ? void 0 : _b.audioFile));
         const insertedDatasetEntry = yield classificationResults.save();
         const results = {
             aid: insertedDatasetEntry.id,
@@ -67,6 +67,7 @@ const classify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(200).send(results);
     }
     catch (e) {
+        console.log(e);
         return res.status(500).send();
     }
 });

@@ -32,7 +32,7 @@ export const classify = async (req: Request, res: Response) => {
   if (!req.files || !req.files?.audioFile) res.status(400).send()
   
   try {
-    const classificationResults: Dataset = (await Api.getAudioClassification(req.files?.audioFile as UploadedFile))[0];
+    const classificationResults: Dataset = (await Api.getAudioClassification(req.files?.audioFile as UploadedFile));
     const insertedDatasetEntry: Dataset = await classificationResults.save()
     const results = {
       aid: insertedDatasetEntry.id,
@@ -41,6 +41,7 @@ export const classify = async (req: Request, res: Response) => {
   
     return res.status(200).send(results)
   } catch (e) {
+    console.log(e)
     return res.status(500).send()
   }
 }
