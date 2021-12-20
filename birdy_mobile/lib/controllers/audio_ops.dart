@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:birdy_mobile/helpers.dart';
 import 'package:birdy_mobile/model/audio_snippet.dart';
@@ -88,6 +89,7 @@ class AudioOpsController {
   }
 
   Future<AudioSnippet> requestClassification(String snippetPath) async {
+    await _convertAudioToRiff(snippetPath);
     AudioSnippet audioSnippet = AudioSnippet(snippetPath);
     audioSnippet = await _setAudioSnippetDuration(audioSnippet);
     // await audioSnippet.readFileBytes();
@@ -140,6 +142,74 @@ class AudioOpsController {
     }
 
     return audioSnippetsList;
+  }
+
+  Future<void> _convertAudioToRiff(String filePath) async {
+    Uint8List bytes = await _readAudioBytes(filePath);
+    File recordedFile = File(filePath);
+    Uint8List audioRiffData = _createAudioRiffData(bytes, 44100);
+    print(audioRiffData.length);
+    return recordedFile.writeAsBytesSync(audioRiffData, flush: true);
+  }
+
+  Uint8List _createAudioRiffData(List<int> data, int sampleRate) {
+    var channels = 1;
+    int byteRate = ((16 * sampleRate * channels) / 8).round();
+    var size = data.length;
+    var fileSize = size + 36;
+
+    return Uint8List.fromList([
+      // "RIFF"
+      82, 73, 70, 70,
+      fileSize & 0xff,
+      (fileSize >> 8) & 0xff,
+      (fileSize >> 16) & 0xff,
+      (fileSize >> 24) & 0xff,
+      // WAVE
+      87, 65, 86, 69,
+      // fmt
+      102, 109, 116, 32,
+      // fmt chunk size 16
+      16, 0, 0, 0,
+      // Type of format
+      1, 0,
+      // One channel
+      channels, 0,
+      // Sample rate
+      sampleRate & 0xff,
+      (sampleRate >> 8) & 0xff,
+      (sampleRate >> 16) & 0xff,
+      (sampleRate >> 24) & 0xff,
+      // Byte rate
+      byteRate & 0xff,
+      (byteRate >> 8) & 0xff,
+      (byteRate >> 16) & 0xff,
+      (byteRate >> 24) & 0xff,
+      // Uhm
+      ((16 * channels) / 8).round(), 0,
+      // bitsize
+      16, 0,
+      // "data"
+      100, 97, 116, 97,
+      size & 0xff,
+      (size >> 8) & 0xff,
+      (size >> 16) & 0xff,
+      (size >> 24) & 0xff,
+      ...data
+    ]);
+  }
+
+  Future<Uint8List> _readAudioBytes(String filePath) async {
+    Uri myUri = Uri.parse(filePath);
+    File audioFile = File.fromUri(myUri);
+    
+    try {
+      return await audioFile.readAsBytes();
+    } catch(e) {
+      log('Error reading audio file: $e');
+    }
+
+    return Uint8List(0);
   }
 
 

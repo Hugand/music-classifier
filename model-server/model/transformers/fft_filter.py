@@ -34,9 +34,10 @@ class FFT_Filter(TransformerMixin):
 
                 
     def __convert_to_frequency(self, inp_filename):
+        # Sound is 1D since it is reading a monochannel RIFF WAV audio file
         samp_freq, sound = wavfile.read(inp_filename)
         sound = sound / 2.0**15
-        signal = sound[:,0]
+        signal = sound
         
         fft_spectrum = np.fft.rfft(signal)
         freq = np.fft.rfftfreq(signal.size, d=1./samp_freq)

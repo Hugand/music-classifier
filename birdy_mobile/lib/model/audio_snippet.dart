@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
+import 'dart:typed_data';
 // import 'dart:typed_data';
 
 class AudioSnippet {
@@ -36,20 +38,6 @@ class AudioSnippet {
   void setAid(int aid) {
     _aid = aid;
   }
-
-  // Future<void> readFileBytes() async {
-  //   Uri myUri = Uri.parse(_filePath);
-  //   File audioFile = File.fromUri(myUri);
-  //   _dateTime = await audioFile.lastModified();
-    
-  //   try {
-  //     final value = await audioFile.readAsBytes();
-  //     // _bytes = Uint8List.fromList(value); 
-  //     log('reading of bytes is completed');
-  //   } catch(e) {
-  //     log('Error reading audio file: $e');
-  //   }
-  // }
 
   void setGenre(String genre) {
     _genre = genre;
