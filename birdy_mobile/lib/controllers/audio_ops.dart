@@ -89,7 +89,7 @@ class AudioOpsController {
   }
 
   Future<AudioSnippet> requestClassification(String snippetPath) async {
-    await _convertAudioToRiff(snippetPath);
+    // await _convertAudioToRiff(snippetPath);
     AudioSnippet audioSnippet = AudioSnippet(snippetPath);
     audioSnippet = await _setAudioSnippetDuration(audioSnippet);
     // await audioSnippet.readFileBytes();

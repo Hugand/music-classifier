@@ -13,7 +13,7 @@ class AudioPipeline:
     def __init__(self):
         self.model = self.load()
         self.pipeline = Pipeline(steps=[
-            ('fft_filter', FFT_Filter()),
+            # ('fft_filter', FFT_Filter()),
             ('features_extractor', AudioFeaturesExtractor()),
             ('feature_imputer', FeatureImputer()),
             ('classifier', self.model)

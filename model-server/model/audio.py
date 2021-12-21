@@ -1,7 +1,9 @@
 import os
+import librosa
 from sklearn.pipeline import Pipeline
 from werkzeug.utils import secure_filename
 from aliases import AudioData
+import soundfile as sf
 
 class Audio:
     data: AudioData = None
@@ -14,7 +16,14 @@ class Audio:
         filename = secure_filename(audio_file.filename)
         file_path = os.path.join('tmp_audio_files', filename)
         audio_file.save(file_path)
+        self.handleNonRiffFile(file_path)
         self.file_path = file_path
+
+
+    def handleNonRiffFile(self, file_path):
+        # Handle Non RIFF wav files
+        x,_ = librosa.load(file_path, sr=16000)
+        sf.write(file_path, x, 16000)
 
     def classify(self) -> int:
         if self.pipeline == None or self.file_path == None:

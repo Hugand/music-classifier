@@ -4,6 +4,8 @@ from flask import json, jsonify
 from model.audio import Audio
 from model.audio_pipeline import AudioPipeline
 from model.np_encoder import NpEncoder
+import librosa
+import soundfile as sf
 
 class AudioController:
     def __init__(self, audio_pipeline: AudioPipeline):
@@ -15,7 +17,7 @@ class AudioController:
         audio.classify()
         os.remove(audio.file_path)
 
-        print(audio.data)
+        print("Success")
         return jsonify(json.dumps(audio.data, cls=NpEncoder))
         # return jsonify(audio.data)
 
